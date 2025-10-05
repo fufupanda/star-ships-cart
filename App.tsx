@@ -12,48 +12,50 @@ import CartScreen from './screens/CartScreen';
 
 const Tab = createBottomTabNavigator();
 
+// Tab icon configuration
+const TAB_ICONS = {
+  Home: { focused: 'home', unfocused: 'home-outline' },
+  Search: { focused: 'search', unfocused: 'search-outline' },
+  Cart: { focused: 'cart', unfocused: 'cart-outline' },
+} as const;
+
+// Helper function for tab bar icons
+const getTabBarIcon = ({ route, focused, color, size }: {
+  route: { name: keyof typeof TAB_ICONS | string };
+  focused: boolean;
+  color: string;
+  size: number;
+}) => {
+  const routeName = route.name as keyof typeof TAB_ICONS;
+  const iconName = TAB_ICONS[routeName]
+    ? TAB_ICONS[routeName][focused ? 'focused' : 'unfocused']
+    : 'help-outline';
+
+  return <Ionicons name={iconName} size={size} color={color} />;
+};
+
+// App Navigator component
+const AppNavigator = () => (
+  <NavigationContainer>
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarIcon: ({ focused, color, size }) =>
+          getTabBarIcon({ route, focused, color, size }),
+      })}
+    >
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Search" component={SearchScreen} />
+      <Tab.Screen name="Cart" component={CartScreen} />
+    </Tab.Navigator>
+    <StatusBar style="auto" />
+  </NavigationContainer>
+);
+
 export default function App() {
   return (
     <Provider store={store}>
-      <NavigationContainer>
-        <Tab.Navigator
-          screenOptions={({ route }) => ({
-            headerShown: false,
-            tabBarIcon: ({ focused, color, size }) => {
-              let iconName: keyof typeof Ionicons.glyphMap;
-
-              if (route.name === 'Home') {
-                iconName = focused ? 'home' : 'home-outline';
-              } else if (route.name === 'Search') {
-                iconName = focused ? 'search' : 'search-outline';
-              } else if (route.name === 'Cart') {
-                iconName = focused ? 'cart' : 'cart-outline';
-              } else {
-                iconName = 'help-outline';
-              }
-
-              return <Ionicons name={iconName} size={size} color={color} />;
-            },
-          })}
-        >
-          <Tab.Screen 
-            name="Home" 
-            component={HomeScreen}
-            options={{ title: 'Home' }}
-          />
-          <Tab.Screen 
-            name="Search" 
-            component={SearchScreen}
-            options={{ title: 'Search' }}
-          />
-          <Tab.Screen 
-            name="Cart" 
-            component={CartScreen}
-            options={{ title: 'Cart' }}
-          />
-        </Tab.Navigator>
-        <StatusBar style="auto" />
-      </NavigationContainer>
+      <AppNavigator />
     </Provider>
   );
 }
