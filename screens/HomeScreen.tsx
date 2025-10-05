@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,8 +8,9 @@ import {
   ImageBackground,
   ImageSourcePropType,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { useAppDispatch, useAppSelector } from "../hooks/redux";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { addItem, updateQuantity } from "../store/cartSlice";
 import {
   fetchProducts,
@@ -19,11 +20,13 @@ import {
 import ProductCard from "../components/ProductCard";
 import FloatingCartInfoButton from "../components/FloatingCartInfoButton";
 
-const bgImage = require('../assets/starship-bg.png') as ImageSourcePropType
+const bgImage = require("../assets/starship-bg.png") as ImageSourcePropType;
 
-export default function HomeScreen() {
+const HomeScreen = () => {
   const dispatch = useAppDispatch();
+  const navigation = useNavigation();
   const cartItems = useAppSelector((state) => state.cart.items);
+  const cartItemCount = useAppSelector((state) => state.cart.itemCount);
   const {
     data: apiData,
     loading,
@@ -60,6 +63,10 @@ export default function HomeScreen() {
       dispatch(loadMoreProducts(apiData.next));
     }
   };
+
+  const handleCartNavigation = useCallback(() => {
+    navigation.navigate("Cart" as never);
+  }, []);
 
   const getMaxQuantity = (productName: string): number => {
     return maxQuantities[productName] || 10;
@@ -130,7 +137,10 @@ export default function HomeScreen() {
           </View>
         )}
 
-        <FloatingCartInfoButton />
+        <FloatingCartInfoButton
+          cartItemCount={cartItemCount}
+          onPress={handleCartNavigation}
+        />
 
         {loading ? (
           <View style={styles.loadingContainer}>
@@ -151,7 +161,9 @@ export default function HomeScreen() {
       </View>
     </ImageBackground>
   );
-}
+};
+
+export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -171,7 +183,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 16,
-    fontWeight:'medium',
+    fontWeight: "medium",
     color: "#fff",
     marginBottom: 10,
   },
@@ -203,12 +215,12 @@ const styles = StyleSheet.create({
   },
   endOfListText: {
     fontSize: 16,
-    fontWeight:'600',
+    fontWeight: "600",
     color: "#fff",
     textAlign: "center",
     fontStyle: "italic",
-    flexWrap: 'wrap',
-    width: '100%',
+    flexWrap: "wrap",
+    width: "100%",
   },
   errorContainer: {
     flex: 1,
@@ -218,11 +230,11 @@ const styles = StyleSheet.create({
     top: -40,
   },
   errorTitle: {
+    textAlign: "center",
+    color: "#FFFFFF",
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 10,
-    color: "#FFFFFF",
-    textAlign: 'center',
     marginTop: 20,
   },
 });
