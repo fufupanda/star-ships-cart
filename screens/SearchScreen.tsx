@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -9,8 +9,9 @@ import {
   ImageSourcePropType,
   ImageBackground,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { useAppDispatch, useAppSelector } from "../hooks/redux";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { addItem, updateQuantity } from "../store/cartSlice";
 import { searchProducts, clearSearchResults } from "../store/productsSlice";
 import ProductCard from "../components/ProductCard";
@@ -18,10 +19,12 @@ import FloatingCartInfoButton from "../components/FloatingCartInfoButton";
 
 const bgImage = require("../assets/starship-bg.png") as ImageSourcePropType;
 
-export default function SearchScreen() {
+const SearchScreen = () => {
+  const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState("");
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector((state) => state.cart.items);
+  const cartItemCount = useAppSelector((state) => state.cart.itemCount);
   const { searchData, searchLoading, searchError, maxQuantities } = useAppSelector((state) => state.products);
 
   const getMaxQuantity = (productName: string): number => {
@@ -51,6 +54,10 @@ export default function SearchScreen() {
   const handleUpdateQuantity = (productName: string, newQuantity: number) => {
     dispatch(updateQuantity({ name: productName, quantity: newQuantity }));
   };
+
+  const handleCartNavigation = useCallback(() => {
+    navigation.navigate("Cart" as never);
+  }, []);
 
   // Debounced search effect
   useEffect(() => {
@@ -98,7 +105,7 @@ export default function SearchScreen() {
           />
         </View>
 
-        <FloatingCartInfoButton />
+        <FloatingCartInfoButton cartItemCount={cartItemCount} onPress={handleCartNavigation}/>
 
         <View style={styles.resultsContainer}>
           {!searchQuery.trim() ? (
@@ -143,7 +150,9 @@ export default function SearchScreen() {
       </View>
     </ImageBackground>
   );
-}
+};
+
+export default SearchScreen;
 
 const styles = StyleSheet.create({
   container: {
