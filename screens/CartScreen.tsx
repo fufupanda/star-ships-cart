@@ -14,7 +14,7 @@ import {
 } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useAppDispatch, useAppSelector } from "../hooks/redux";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 import {
   removeItem,
   updateQuantity,
