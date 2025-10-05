@@ -5,8 +5,3 @@ export const API_CONFIG = {
     PRODUCT_BY_NAME: (name: string) => `/starships/?search=${name}`,
   }
 };
-
-export const getApiUrl = (endpoint: string): string => {
-  return `${API_CONFIG.BASE_URL}${endpoint}`;
-};
-
