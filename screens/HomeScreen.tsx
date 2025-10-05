@@ -125,7 +125,7 @@ export default function HomeScreen() {
 
         {error && (
           <View style={styles.errorContainer}>
-            <AntDesign name="api" size={80} color="black" />
+            <AntDesign name="api" size={80} color="white" />
             <Text style={styles.errorTitle}>{error}</Text>
           </View>
         )}
@@ -212,15 +212,17 @@ const styles = StyleSheet.create({
   },
   errorContainer: {
     flex: 1,
-    backgroundColor: "#f8f9fa",
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
+    top: -40,
   },
   errorTitle: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 10,
-    color: "#2c3e50",
+    color: "#FFFFFF",
+    textAlign: 'center',
+    marginTop: 20,
   },
 });
