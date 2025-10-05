@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getApiUrl, API_CONFIG } from '../config/api';
+import { API_CONFIG } from '../config/api';
+import { getApiUrl } from '../services/api.service';
 
 export interface IStarShip {
   name: string;
