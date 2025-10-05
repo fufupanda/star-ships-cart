@@ -1,23 +1,21 @@
 import { Text, TouchableOpacity, StyleSheet } from "react-native";
-import React, { useCallback } from "react";
+import React, { FC } from "react";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { useNavigation } from "@react-navigation/native";
-import { useAppSelector } from "../hooks/redux";
 
-const FloatingCartInfoButton = () => {
-  const navigation = useNavigation();
-  const cartItemCount = useAppSelector((state) => state.cart.itemCount);
+interface IFloatingCartInfoButtonProps {
+  cartItemCount: number;
+  onPress: () => void;
+}
 
-  const handleCartNavigation = useCallback(() => {
-    navigation.navigate("Cart" as never);
-  }, []);
+const FloatingCartInfoButton: FC<IFloatingCartInfoButtonProps> = (props) => {
+  const { cartItemCount, onPress } = props;
 
   if (cartItemCount === 0) {
     return null;
   }
 
   return (
-    <TouchableOpacity onPress={handleCartNavigation} style={styles.cartButton}>
+    <TouchableOpacity onPress={onPress} style={styles.cartButton}>
       <Text style={styles.cartItemCountText}>{cartItemCount}</Text>
       <MaterialCommunityIcons name="cart-arrow-right" size={28} color="white" />
     </TouchableOpacity>
