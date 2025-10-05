@@ -212,8 +212,8 @@ const styles = StyleSheet.create({
     paddingVertical: 120,
   },
   errorSubtext: {
-    fontSize: 16,
-    fontWeight: "600",
+    fontSize: 24,
+    fontWeight: "bold",
     color: "#FFFFFF",
     textAlign: "center",
     marginTop: 20,
